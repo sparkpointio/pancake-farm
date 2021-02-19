@@ -107,20 +107,6 @@ contract MasterChef is Ownable {
         }
     }
 
-    // View function to see pending CAKEs on frontend.
-    function pendingCake(uint256 _pid, address _user) external view returns (uint256) {
-        PoolInfo storage pool = poolInfo[_pid];
-        UserInfo storage user = userInfo[_pid][_user];
-        uint256 accCakePerShare = pool.accCakePerShare;
-        uint256 lpSupply = pool.lpToken.balanceOf(address(this));
-        if (block.number > pool.lastRewardBlock && lpSupply != 0) {
-            uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
-            uint256 cakeReward = multiplier.mul(cakePerBlock).mul(pool.allocPoint).div(totalAllocPoint);
-            accCakePerShare = accCakePerShare.add(cakeReward.mul(1e12).div(lpSupply));
-        }
-        return user.amount.mul(accCakePerShare).div(1e12).sub(user.rewardDebt);
-    }
-
     // Deposit LP tokens to MasterChef for CAKE allocation.
     function deposit(uint256 _pid, uint256 _amount) public {
 
