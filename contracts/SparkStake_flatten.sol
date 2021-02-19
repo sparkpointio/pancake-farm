@@ -729,6 +729,19 @@ contract SparkStake is Ownable {
       _;
     }
 
+    // View function to see pending Reward on frontend.
+    function pendingReward(address _user) external view returns (uint256) {
+        UserInfo storage user = userInfo[_user];
+        uint256 accCakePerShare = poolInfo.accCakePerShare;
+        uint256 lpSupply = poolInfo.lpToken.balanceOf(address(this));
+        if (block.number > poolInfo.lastRewardBlock && lpSupply != 0) {
+            uint256 multiplier = getMultiplier(poolInfo.lastRewardBlock, block.number);
+            uint256 cakeReward = multiplier.mul(rewardPerBlock).mul(poolInfo.allocPoint).div(totalAllocPoint);
+            accCakePerShare = accCakePerShare.add(cakeReward.mul(1e12).div(lpSupply));
+        }
+        return user.amount.mul(accCakePerShare).div(1e12).sub(user.rewardDebt);
+    }
+
     // Update reward variables of the given pool to be up-to-date
     function updatePool() internal {
         if (block.number <= poolInfo.lastRewardBlock) {
