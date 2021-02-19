@@ -41,6 +41,9 @@ contract SparkStake is Ownable {
     // The REWARD TOKEN!
     IBEP20 public rewardToken;
 
+    // Tokens rewarded per block.
+    uint256 public rewardPerBlock;
+
     // Total allocation points. Must be the sum of all allocation points in all pools.
     uint256 private totalAllocPoint = 0;
     // The block number when stakingToken mining starts.
