@@ -61,9 +61,9 @@ contract MasterChef is Ownable {
     uint256 public bonusEndBlock;
 
 
-    event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
-    event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
-    event EmergencyWithdraw(address indexed user, uint256 indexed pid, uint256 amount);
+    event Deposit(address indexed user, uint256 amount);
+    event Withdraw(address indexed user, uint256 amount);
+    event EmergencyWithdraw(address indexed user, uint256 amount);
 
     constructor(
         CakeToken _cake,
