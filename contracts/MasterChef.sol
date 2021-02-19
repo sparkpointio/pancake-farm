@@ -65,9 +65,12 @@ contract MasterChef is Ownable {
     // Info of each user that stakes LP tokens.
     
     // Total allocation points. Must be the sum of all allocation points in all pools.
-    uint256 public totalAllocPoint = 0;
-    // The block number when CAKE mining starts.
+    uint256 private totalAllocPoint = 0;
+    // The block number when stakingToken mining starts.
     uint256 public startBlock;
+    // The block number when stakingToken mining ends.
+    uint256 public bonusEndBlock;
+
 
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
