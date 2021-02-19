@@ -37,6 +37,7 @@ contract MasterChef is Ownable {
         //   3. User's `amount` gets updated.
         //   4. User's `rewardDebt` gets updated.
     }
+    mapping (uint256 => mapping (address => UserInfo)) public userInfo;
 
     // Pool Info
     struct PoolInfo {
@@ -61,7 +62,7 @@ contract MasterChef is Ownable {
     IMigratorChef public migrator;
 
     // Info of each user that stakes LP tokens.
-    mapping (uint256 => mapping (address => UserInfo)) public userInfo;
+    
     // Total allocation points. Must be the sum of all allocation points in all pools.
     uint256 public totalAllocPoint = 0;
     // The block number when CAKE mining starts.
