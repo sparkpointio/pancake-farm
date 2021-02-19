@@ -743,7 +743,7 @@ contract SparkStake is Ownable {
     }
 
     // Update reward variables of the given pool to be up-to-date
-    function updatePool() internal {
+    function updatePool() public {
         if (block.number <= poolInfo.lastRewardBlock) {
             return;
         }
