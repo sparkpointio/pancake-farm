@@ -48,10 +48,11 @@ contract MasterChef is Ownable {
     }
     PoolInfo public poolInfo;
 
-    // The CAKE TOKEN!
-    CakeToken public cake;
-    // The SYRUP TOKEN!
-    SyrupBar public syrup;
+    // The STAKING TOKEN!
+    IBEP20 public stakingToken;
+    // The REWARD TOKEN!
+    IBEP20 public rewardToken;
+
     // Dev address.
     address public devaddr;
     // CAKE tokens created per block.
