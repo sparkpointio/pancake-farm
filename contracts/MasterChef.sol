@@ -66,28 +66,25 @@ contract MasterChef is Ownable {
     event EmergencyWithdraw(address indexed user, uint256 amount);
 
     constructor(
-        CakeToken _cake,
-        SyrupBar _syrup,
-        address _devaddr,
-        uint256 _cakePerBlock,
-        uint256 _startBlock
+        IBEP20 _stakingToken,
+        IBEP20 _rewardToken,
+        uint256 _rewardPerBlock,
+        uint256 _startBlock,
+        uint256 _bonusEndBlock
     ) public {
-        cake = _cake;
-        syrup = _syrup;
-        devaddr = _devaddr;
-        cakePerBlock = _cakePerBlock;
+        stakingToken = _stakingToken;
+        rewardToken = _rewardToken;
+        rewardPerBlock = _rewardPerBlock;
         startBlock = _startBlock;
+        bonusEndBlock = _bonusEndBlock;
 
-        // staking pool
-        poolInfo.push(PoolInfo({
-            lpToken: _cake,
-            allocPoint: 1000,
-            lastRewardBlock: startBlock,
-            accCakePerShare: 0
-        }));
+        // Staking Pool
+        poolInfo.lpToken = stakingToken;
+        poolInfo.allocPoint = 1000;
+        poolInfo.lastRewardBlock = startBlock;
+        poolInfo.accCakePerShare = 0;
 
         totalAllocPoint = 1000;
-
     }
 
     function updateMultiplier(uint256 multiplierNumber) public onlyOwner {
