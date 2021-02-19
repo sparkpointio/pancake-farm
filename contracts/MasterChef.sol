@@ -25,7 +25,7 @@ contract MasterChef is Ownable {
         //   3. User's `amount` gets updated.
         //   4. User's `rewardDebt` gets updated.
     }
-    mapping (uint256 => mapping (address => UserInfo)) public userInfo;
+    mapping (address => UserInfo) public userInfo;
 
     // Pool Info
     struct PoolInfo {
