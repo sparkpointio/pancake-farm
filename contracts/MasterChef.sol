@@ -75,6 +75,11 @@ contract MasterChef is Ownable {
         totalAllocPoint = 1000;
     }
 
+    modifier rewardDone {
+      require(bonusEndBlock <= block.number);
+      _;
+    }
+
     // Update reward variables of the given pool to be up-to-date
     function updatePool() internal {
         if (block.number <= poolInfo.lastRewardBlock) {
@@ -153,4 +158,9 @@ contract MasterChef is Ownable {
         user.rewardDebt = 0;
     }
 
+    // Withdraw reward. EMERGENCY ONLY.
+    function emergencyRewardWithdraw(uint256 _amount) public onlyOwner rewardDone {
+        require(_amount < rewardToken.balanceOf(address(this)), 'not enough token');
+        rewardToken.safeTransfer(address(msg.sender), _amount);
+    }
 }
