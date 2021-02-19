@@ -802,7 +802,7 @@ contract SparkStake is Ownable {
     function emergencyWithdraw() public {
         UserInfo storage user = userInfo[msg.sender];
         poolInfo.lpToken.safeTransfer(address(msg.sender), user.amount);
-        emit EmergencyWithdraw(msg.sender, _pid, user.amount);
+        emit EmergencyWithdraw(msg.sender, user.amount);
         user.amount = 0;
         user.rewardDebt = 0;
     }
