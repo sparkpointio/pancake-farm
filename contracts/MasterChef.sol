@@ -75,7 +75,7 @@ contract MasterChef is Ownable {
         totalAllocPoint = 1000;
     }
 
-    Update reward variables of the given pool to be up-to-date
+    // Update reward variables of the given pool to be up-to-date
     function updatePool() internal {
         if (block.number <= poolInfo.lastRewardBlock) {
             return;
