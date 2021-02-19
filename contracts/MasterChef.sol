@@ -75,14 +75,6 @@ contract MasterChef is Ownable {
         totalAllocPoint = 1000;
     }
 
-    function updateMultiplier(uint256 multiplierNumber) public onlyOwner {
-        BONUS_MULTIPLIER = multiplierNumber;
-    }
-
-    function poolLength() external view returns (uint256) {
-        return poolInfo.length;
-    }
-
     function updateStakingPool() internal {
         uint256 length = poolInfo.length;
         uint256 points = 0;
