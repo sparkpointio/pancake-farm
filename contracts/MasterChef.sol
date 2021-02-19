@@ -96,7 +96,7 @@ contract MasterChef is Ownable {
         poolInfo.lastRewardBlock = block.number;
     }
     
-    // Emergency only: Terminate current ongoing pool
+    // EMERGENCY ONLY: Terminate current ongoing pool
     function stopReward() public onlyOwner {
         bonusEndBlock = block.number;
     }
@@ -112,7 +112,7 @@ contract MasterChef is Ownable {
         }
     }
 
-    // Stake CAKE tokens to MasterChef
+    // Stake stakingTokens to SparkStake
     function enterStaking(uint256 _amount) public {
         UserInfo storage user = userInfo[msg.sender];
         updatePool();
@@ -131,7 +131,7 @@ contract MasterChef is Ownable {
         emit Deposit(msg.sender, _amount);
     }
 
-    // Withdraw CAKE tokens from STAKING.
+    // Withdraw stakingTokens from SparkStake.
     function leaveStaking(uint256 _amount) public {
         UserInfo storage user = userInfo[msg.sender];
         require(user.amount >= _amount, "withdraw: not good");
@@ -149,7 +149,7 @@ contract MasterChef is Ownable {
         emit Withdraw(msg.sender, _amount);
     }
 
-    // Withdraw without caring about rewards. EMERGENCY ONLY.
+    // EMERGENCY ONLY: Withdraw without caring about rewards.
     function emergencyWithdraw() public {
         UserInfo storage user = userInfo[msg.sender];
         poolInfo.lpToken.safeTransfer(address(msg.sender), user.amount);
@@ -158,7 +158,7 @@ contract MasterChef is Ownable {
         user.rewardDebt = 0;
     }
 
-    // Withdraw reward. EMERGENCY ONLY.
+    // EMERGENCY ONLY: Withdraw reward.
     function emergencyRewardWithdraw(uint256 _amount) public onlyOwner rewardDone {
         require(_amount < rewardToken.balanceOf(address(this)), 'not enough token');
         rewardToken.safeTransfer(address(msg.sender), _amount);
