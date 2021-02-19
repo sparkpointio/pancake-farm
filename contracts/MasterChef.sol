@@ -38,13 +38,14 @@ contract MasterChef is Ownable {
         //   4. User's `rewardDebt` gets updated.
     }
 
-    // Info of each pool.
+    // Pool Info
     struct PoolInfo {
         IBEP20 lpToken;           // Address of LP token contract.
         uint256 allocPoint;       // How many allocation points assigned to this pool. CAKEs to distribute per block.
         uint256 lastRewardBlock;  // Last block number that CAKEs distribution occurs.
-        uint256 accCakePerShare; // Accumulated CAKEs per share, times 1e12. See below.
+        uint256 accCakePerShare;  // Accumulated CAKEs per share, times 1e12. See below.
     }
+    PoolInfo public poolInfo;
 
     // The CAKE TOKEN!
     CakeToken public cake;
@@ -59,8 +60,6 @@ contract MasterChef is Ownable {
     // The migrator contract. It has a lot of power. Can only be set through governance (owner).
     IMigratorChef public migrator;
 
-    // Info of each pool.
-    PoolInfo[] public poolInfo;
     // Info of each user that stakes LP tokens.
     mapping (uint256 => mapping (address => UserInfo)) public userInfo;
     // Total allocation points. Must be the sum of all allocation points in all pools.
