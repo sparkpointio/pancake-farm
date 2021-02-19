@@ -76,16 +76,18 @@ contract MasterChef is Ownable {
     }
 
     function updateStakingPool() internal {
-        uint256 length = poolInfo.length;
-        uint256 points = 0;
-        for (uint256 pid = 1; pid < length; ++pid) {
-            points = points.add(poolInfo[pid].allocPoint);
+        if (block.number <= poolInfo.lastRewardBlock) {
+            return;
         }
-        if (points != 0) {
-            points = points.div(3);
-            totalAllocPoint = totalAllocPoint.sub(poolInfo[0].allocPoint).add(points);
-            poolInfo[0].allocPoint = points;
+        uint256 lpSupply = poolInfo.lpToken.balanceOf(address(this));
+        if (lpSupply == 0) {
+            poolInfo.lastRewardBlock = block.number;
+            return;
         }
+        uint256 multiplier = getMultiplier(poolInfo.lastRewardBlock, block.number);
+        uint256 cakeReward = multiplier.mul(rewardPerBlock).mul(poolInfo.allocPoint).div(totalAllocPoint);
+        poolInfo.accCakePerShare = poolInfo.accCakePerShare.add(cakeReward.mul(1e12).div(lpSupply));
+        poolInfo.lastRewardBlock = block.number;
     }
 
     // Return reward multiplier over the given _from to _to block.
