@@ -53,17 +53,6 @@ contract MasterChef is Ownable {
     // The REWARD TOKEN!
     IBEP20 public rewardToken;
 
-    // Dev address.
-    address public devaddr;
-    // CAKE tokens created per block.
-    uint256 public cakePerBlock;
-    // Bonus muliplier for early cake makers.
-    uint256 public BONUS_MULTIPLIER = 1;
-    // The migrator contract. It has a lot of power. Can only be set through governance (owner).
-    IMigratorChef public migrator;
-
-    // Info of each user that stakes LP tokens.
-    
     // Total allocation points. Must be the sum of all allocation points in all pools.
     uint256 private totalAllocPoint = 0;
     // The block number when stakingToken mining starts.
