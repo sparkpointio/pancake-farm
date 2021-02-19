@@ -90,6 +90,11 @@ contract MasterChef is Ownable {
         poolInfo.accCakePerShare = poolInfo.accCakePerShare.add(cakeReward.mul(1e12).div(lpSupply));
         poolInfo.lastRewardBlock = block.number;
     }
+    
+    // Emergency only: Terminate current ongoing pool
+    function stopReward() public onlyOwner {
+        bonusEndBlock = block.number;
+    }
 
     // Return reward multiplier over the given _from to _to block.
     function getMultiplier(uint256 _from, uint256 _to) public view returns (uint256) {
