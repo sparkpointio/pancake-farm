@@ -76,7 +76,7 @@ contract MasterChef is Ownable {
     }
 
     Update reward variables of the given pool to be up-to-date
-    function updateStakingPool() internal {
+    function updatePool() internal {
         if (block.number <= poolInfo.lastRewardBlock) {
             return;
         }
