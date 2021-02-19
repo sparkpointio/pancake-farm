@@ -76,7 +76,7 @@ contract MasterChef is Ownable {
     }
 
     modifier rewardDone {
-      require(bonusEndBlock <= block.number);
+      require(bonusEndBlock <= block.number, 'SparkStake: Pool not yet ended');
       _;
     }
 
@@ -134,7 +134,7 @@ contract MasterChef is Ownable {
     // Withdraw stakingTokens from SparkStake.
     function leaveStaking(uint256 _amount) public {
         UserInfo storage user = userInfo[msg.sender];
-        require(user.amount >= _amount, "withdraw: not good");
+        require(user.amount >= _amount, 'SparkStake: Amount exceeded user available amount');
         updatePool();
         uint256 pending = user.amount.mul(poolInfo.accCakePerShare).div(1e12).sub(user.rewardDebt);
         if(pending > 0) {
@@ -160,7 +160,7 @@ contract MasterChef is Ownable {
 
     // EMERGENCY ONLY: Withdraw reward.
     function emergencyRewardWithdraw(uint256 _amount) public onlyOwner rewardDone {
-        require(_amount < rewardToken.balanceOf(address(this)), 'not enough token');
+        require(_amount < rewardToken.balanceOf(address(this)), 'SparkStake: Not enough token/s');
         rewardToken.safeTransfer(address(msg.sender), _amount);
     }
 }
