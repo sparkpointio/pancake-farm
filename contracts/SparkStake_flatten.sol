@@ -1,7 +1,3 @@
-// File: @pancakeswap\pancake-swap-lib\contracts\math\SafeMath.sol
-
-// SPDX-License-Identifier: MIT
-
 pragma solidity >=0.4.0;
 
 /**
@@ -190,10 +186,6 @@ library SafeMath {
     }
 }
 
-// File: @pancakeswap\pancake-swap-lib\contracts\token\BEP20\IBEP20.sol
-
-// SPDX-License-Identifier: GPL-3.0-or-later
-
 pragma solidity >=0.4.0;
 
 interface IBEP20 {
@@ -291,10 +283,6 @@ interface IBEP20 {
     event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 
-// File: node_modules\@pancakeswap\pancake-swap-lib\contracts\token\BEP20\IBEP20.sol
-
-// SPDX-License-Identifier: GPL-3.0-or-later
-
 pragma solidity >=0.4.0;
 
 interface IBEP20 {
@@ -391,10 +379,6 @@ interface IBEP20 {
      */
     event Approval(address indexed owner, address indexed spender, uint256 value);
 }
-
-// File: node_modules\@pancakeswap\pancake-swap-lib\contracts\math\SafeMath.sol
-
-// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.4.0;
 
@@ -583,10 +567,6 @@ library SafeMath {
         }
     }
 }
-
-// File: node_modules\@pancakeswap\pancake-swap-lib\contracts\utils\Address.sol
-
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.6.2;
 
@@ -748,10 +728,6 @@ library Address {
     }
 }
 
-// File: @pancakeswap\pancake-swap-lib\contracts\token\BEP20\SafeBEP20.sol
-
-// SPDX-License-Identifier: MIT
-
 pragma solidity ^0.6.0;
 
 
@@ -851,10 +827,6 @@ library SafeBEP20 {
     }
 }
 
-// File: node_modules\@pancakeswap\pancake-swap-lib\contracts\GSN\Context.sol
-
-// SPDX-License-Identifier: GPL-3.0-or-later
-
 pragma solidity >=0.4.0;
 
 /*
@@ -881,10 +853,6 @@ contract Context {
         return msg.data;
     }
 }
-
-// File: @pancakeswap\pancake-swap-lib\contracts\access\Ownable.sol
-
-// SPDX-License-Identifier: GPL-3.0-or-later
 
 pragma solidity >=0.4.0;
 
