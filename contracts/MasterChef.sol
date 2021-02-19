@@ -75,6 +75,7 @@ contract MasterChef is Ownable {
         totalAllocPoint = 1000;
     }
 
+    Update reward variables of the given pool to be up-to-date
     function updateStakingPool() internal {
         if (block.number <= poolInfo.lastRewardBlock) {
             return;
@@ -107,25 +108,6 @@ contract MasterChef is Ownable {
             accCakePerShare = accCakePerShare.add(cakeReward.mul(1e12).div(lpSupply));
         }
         return user.amount.mul(accCakePerShare).div(1e12).sub(user.rewardDebt);
-    }
-
-    // Update reward variables of the given pool to be up-to-date.
-    function updatePool(uint256 _pid) public {
-        PoolInfo storage pool = poolInfo[_pid];
-        if (block.number <= pool.lastRewardBlock) {
-            return;
-        }
-        uint256 lpSupply = pool.lpToken.balanceOf(address(this));
-        if (lpSupply == 0) {
-            pool.lastRewardBlock = block.number;
-            return;
-        }
-        uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
-        uint256 cakeReward = multiplier.mul(cakePerBlock).mul(pool.allocPoint).div(totalAllocPoint);
-        cake.mint(devaddr, cakeReward.div(10));
-        cake.mint(address(syrup), cakeReward);
-        pool.accCakePerShare = pool.accCakePerShare.add(cakeReward.mul(1e12).div(lpSupply));
-        pool.lastRewardBlock = block.number;
     }
 
     // Deposit LP tokens to MasterChef for CAKE allocation.
