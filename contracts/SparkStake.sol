@@ -14,7 +14,7 @@ contract SparkStake is Ownable {
         uint256 amount;     // How many LP tokens the user has provided.
         uint256 rewardDebt; // Reward debt. See explanation below.
         //
-        // We do some fancy math here. Basically, any point in time, the amount of CAKEs
+        // We do some fancy math here. Basically, any point in time, the amount of Token Rewards
         // entitled to a user but is pending to be distributed is:
         //
         //   pending reward = (user.amount * pool.accRewardPerShare) - user.rewardDebt
@@ -30,9 +30,9 @@ contract SparkStake is Ownable {
     // Pool Info
     struct PoolInfo {
         IBEP20 lpToken;           // Address of LP token contract.
-        uint256 allocPoint;       // How many allocation points assigned to this pool. CAKEs to distribute per block.
-        uint256 lastRewardBlock;  // Last block number that CAKEs distribution occurs.
-        uint256 accRewardPerShare;  // Accumulated CAKEs per share, times 1e12. See below.
+        uint256 allocPoint;       // How many allocation points assigned to this pool. Token Rewards to distribute per block.
+        uint256 lastRewardBlock;  // Last block number that Token Rewards distribution occurs.
+        uint256 accRewardPerShare;  // Accumulated Token Rewards per share, times 1e12. See below.
     }
     PoolInfo public poolInfo;
 
