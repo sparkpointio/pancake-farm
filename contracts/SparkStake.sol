@@ -5,7 +5,7 @@ import "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/IBEP20.sol";
 import "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/SafeBEP20.sol";
 import "@pancakeswap/pancake-swap-lib/contracts/access/Ownable.sol";
 
-contract SparkStake is Ownable {
+contract SparkPool is Ownable {
     using SafeMath for uint256;
     using SafeBEP20 for IBEP20;
 

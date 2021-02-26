@@ -651,7 +651,7 @@ pragma solidity 0.6.12;
 
 
 
-contract SparkStake is Ownable {
+contract SparkPool is Ownable {
     using SafeMath for uint256;
     using SafeBEP20 for IBEP20;
 
