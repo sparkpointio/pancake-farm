@@ -660,13 +660,13 @@ contract SparkStake is Ownable {
         uint256 amount;     // How many LP tokens the user has provided.
         uint256 rewardDebt; // Reward debt. See explanation below.
         //
-        // We do some fancy math here. Basically, any point in time, the amount of CAKEs
+        // We do some fancy math here. Basically, any point in time, the amount of Token Rewards
         // entitled to a user but is pending to be distributed is:
         //
-        //   pending reward = (user.amount * pool.accCakePerShare) - user.rewardDebt
+        //   pending reward = (user.amount * pool.accRewardPerShare) - user.rewardDebt
         //
         // Whenever a user deposits or withdraws LP tokens to a pool. Here's what happens:
-        //   1. The pool's `accCakePerShare` (and `lastRewardBlock`) gets updated.
+        //   1. The pool's `accRewardPerShare` (and `lastRewardBlock`) gets updated.
         //   2. User receives the pending reward sent to his/her address.
         //   3. User's `amount` gets updated.
         //   4. User's `rewardDebt` gets updated.
@@ -676,9 +676,9 @@ contract SparkStake is Ownable {
     // Pool Info
     struct PoolInfo {
         IBEP20 lpToken;           // Address of LP token contract.
-        uint256 allocPoint;       // How many allocation points assigned to this pool. CAKEs to distribute per block.
-        uint256 lastRewardBlock;  // Last block number that CAKEs distribution occurs.
-        uint256 accCakePerShare;  // Accumulated CAKEs per share, times 1e12. See below.
+        uint256 allocPoint;       // How many allocation points assigned to this pool. Token Rewards to distribute per block.
+        uint256 lastRewardBlock;  // Last block number that Token Rewards distribution occurs.
+        uint256 accRewardPerShare;  // Accumulated Token Rewards per share, times 1e12. See below.
     }
     PoolInfo public poolInfo;
 
@@ -719,7 +719,7 @@ contract SparkStake is Ownable {
         poolInfo.lpToken = stakingToken;
         poolInfo.allocPoint = 1000;
         poolInfo.lastRewardBlock = startBlock;
-        poolInfo.accCakePerShare = 0;
+        poolInfo.accRewardPerShare = 0;
 
         totalAllocPoint = 1000;
     }
@@ -732,14 +732,14 @@ contract SparkStake is Ownable {
     // View function to see pending Reward on frontend.
     function pendingReward(address _user) external view returns (uint256) {
         UserInfo storage user = userInfo[_user];
-        uint256 accCakePerShare = poolInfo.accCakePerShare;
+        uint256 accRewardPerShare = poolInfo.accRewardPerShare;
         uint256 lpSupply = poolInfo.lpToken.balanceOf(address(this));
         if (block.number > poolInfo.lastRewardBlock && lpSupply != 0) {
             uint256 multiplier = getMultiplier(poolInfo.lastRewardBlock, block.number);
-            uint256 cakeReward = multiplier.mul(rewardPerBlock).mul(poolInfo.allocPoint).div(totalAllocPoint);
-            accCakePerShare = accCakePerShare.add(cakeReward.mul(1e12).div(lpSupply));
+            uint256 tokenReward = multiplier.mul(rewardPerBlock).mul(poolInfo.allocPoint).div(totalAllocPoint);
+            accRewardPerShare = accRewardPerShare.add(tokenReward.mul(1e12).div(lpSupply));
         }
-        return user.amount.mul(accCakePerShare).div(1e12).sub(user.rewardDebt);
+        return user.amount.mul(accRewardPerShare).div(1e12).sub(user.rewardDebt);
     }
 
     // Update reward variables of the given pool to be up-to-date
@@ -753,8 +753,8 @@ contract SparkStake is Ownable {
             return;
         }
         uint256 multiplier = getMultiplier(poolInfo.lastRewardBlock, block.number);
-        uint256 cakeReward = multiplier.mul(rewardPerBlock).mul(poolInfo.allocPoint).div(totalAllocPoint);
-        poolInfo.accCakePerShare = poolInfo.accCakePerShare.add(cakeReward.mul(1e12).div(lpSupply));
+        uint256 tokenReward = multiplier.mul(rewardPerBlock).mul(poolInfo.allocPoint).div(totalAllocPoint);
+        poolInfo.accRewardPerShare = poolInfo.accRewardPerShare.add(tokenReward.mul(1e12).div(lpSupply));
         poolInfo.lastRewardBlock = block.number;
     }
     
@@ -779,7 +779,7 @@ contract SparkStake is Ownable {
         UserInfo storage user = userInfo[msg.sender];
         updatePool();
         if (user.amount > 0) {
-            uint256 pending = user.amount.mul(poolInfo.accCakePerShare).div(1e12).sub(user.rewardDebt);
+            uint256 pending = user.amount.mul(poolInfo.accRewardPerShare).div(1e12).sub(user.rewardDebt);
             if(pending > 0) {
                 rewardToken.safeTransfer(address(msg.sender), pending);
             }
@@ -788,7 +788,7 @@ contract SparkStake is Ownable {
             poolInfo.lpToken.safeTransferFrom(address(msg.sender), address(this), _amount);
             user.amount = user.amount.add(_amount);
         }
-        user.rewardDebt = user.amount.mul(poolInfo.accCakePerShare).div(1e12);
+        user.rewardDebt = user.amount.mul(poolInfo.accRewardPerShare).div(1e12);
 
         emit Deposit(msg.sender, _amount);
     }
@@ -798,7 +798,7 @@ contract SparkStake is Ownable {
         UserInfo storage user = userInfo[msg.sender];
         require(user.amount >= _amount, 'SparkStake: Amount exceeded user available amount');
         updatePool();
-        uint256 pending = user.amount.mul(poolInfo.accCakePerShare).div(1e12).sub(user.rewardDebt);
+        uint256 pending = user.amount.mul(poolInfo.accRewardPerShare).div(1e12).sub(user.rewardDebt);
         if(pending > 0) {
             rewardToken.safeTransfer(address(msg.sender), pending);
         }
@@ -806,7 +806,7 @@ contract SparkStake is Ownable {
             user.amount = user.amount.sub(_amount);
             poolInfo.lpToken.safeTransfer(address(msg.sender), _amount);
         }
-        user.rewardDebt = user.amount.mul(poolInfo.accCakePerShare).div(1e12);
+        user.rewardDebt = user.amount.mul(poolInfo.accRewardPerShare).div(1e12);
 
         emit Withdraw(msg.sender, _amount);
     }
