@@ -90,8 +90,8 @@ contract SparkStake is Ownable {
         uint256 lpSupply = poolInfo.lpToken.balanceOf(address(this));
         if (block.number > poolInfo.lastRewardBlock && lpSupply != 0) {
             uint256 multiplier = getMultiplier(poolInfo.lastRewardBlock, block.number);
-            uint256 cakeReward = multiplier.mul(rewardPerBlock).mul(poolInfo.allocPoint).div(totalAllocPoint);
-            accRewardPerShare = accRewardPerShare.add(cakeReward.mul(1e12).div(lpSupply));
+            uint256 tokenReward = multiplier.mul(rewardPerBlock).mul(poolInfo.allocPoint).div(totalAllocPoint);
+            accRewardPerShare = accRewardPerShare.add(tokenReward.mul(1e12).div(lpSupply));
         }
         return user.amount.mul(accRewardPerShare).div(1e12).sub(user.rewardDebt);
     }
@@ -107,8 +107,8 @@ contract SparkStake is Ownable {
             return;
         }
         uint256 multiplier = getMultiplier(poolInfo.lastRewardBlock, block.number);
-        uint256 cakeReward = multiplier.mul(rewardPerBlock).mul(poolInfo.allocPoint).div(totalAllocPoint);
-        poolInfo.accRewardPerShare = poolInfo.accRewardPerShare.add(cakeReward.mul(1e12).div(lpSupply));
+        uint256 tokenReward = multiplier.mul(rewardPerBlock).mul(poolInfo.allocPoint).div(totalAllocPoint);
+        poolInfo.accRewardPerShare = poolInfo.accRewardPerShare.add(tokenReward.mul(1e12).div(lpSupply));
         poolInfo.lastRewardBlock = block.number;
     }
     
