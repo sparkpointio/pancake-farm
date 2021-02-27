@@ -41,6 +41,8 @@ contract SparkPool is Ownable {
     // The REWARD TOKEN!
     IBEP20 public rewardToken;
 
+    uint256 public maxStaking;
+
     // Tokens rewarded per block.
     uint256 public rewardPerBlock;
 
@@ -76,6 +78,7 @@ contract SparkPool is Ownable {
         poolInfo.accRewardPerShare = 0;
 
         totalAllocPoint = 1000;
+        maxStaking = 50000000000000000000;
     }
 
     modifier rewardDone {
@@ -131,6 +134,9 @@ contract SparkPool is Ownable {
     // Stake stakingTokens to SparkStake
     function enterStaking(uint256 _amount) public {
         UserInfo storage user = userInfo[msg.sender];
+
+        require (_amount.add(user.amount) <= maxStaking, 'SparkStake: Exceed max stake');
+
         updatePool();
         if (user.amount > 0) {
             uint256 pending = user.amount.mul(poolInfo.accRewardPerShare).div(1e12).sub(user.rewardDebt);
