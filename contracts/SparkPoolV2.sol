@@ -82,7 +82,7 @@ contract SparkPool is Ownable {
     }
 
     modifier rewardDone {
-      require(bonusEndBlock <= block.number, 'SparkStake: Pool not yet ended');
+      require(bonusEndBlock <= block.number, 'SparkPool: Pool not yet ended');
       _;
     }
 
@@ -131,11 +131,11 @@ contract SparkPool is Ownable {
         }
     }
 
-    // Stake stakingTokens to SparkStake
+    // Stake stakingTokens to SparkPool
     function enterStaking(uint256 _amount) public {
         UserInfo storage user = userInfo[msg.sender];
 
-        require (_amount.add(user.amount) <= maxStaking, 'SparkStake: Exceed max stake');
+        require (_amount.add(user.amount) <= maxStaking, 'SparkPool: Exceed max stake');
 
         updatePool();
         if (user.amount > 0) {
@@ -153,10 +153,10 @@ contract SparkPool is Ownable {
         emit Deposit(msg.sender, _amount);
     }
 
-    // Withdraw stakingTokens from SparkStake.
+    // Withdraw stakingTokens from SparkPool.
     function leaveStaking(uint256 _amount) public {
         UserInfo storage user = userInfo[msg.sender];
-        require(user.amount >= _amount, 'SparkStake: Amount exceeded user available amount');
+        require(user.amount >= _amount, 'SparkPool: Amount exceeded user available amount');
         updatePool();
         uint256 pending = user.amount.mul(poolInfo.accRewardPerShare).div(1e12).sub(user.rewardDebt);
         if(pending > 0) {
@@ -182,7 +182,7 @@ contract SparkPool is Ownable {
 
     // EMERGENCY ONLY: Withdraw reward.
     function emergencyRewardWithdraw(uint256 _amount) public onlyOwner rewardDone {
-        require(_amount < rewardToken.balanceOf(address(this)), 'SparkStake: Not enough token/s');
+        require(_amount < rewardToken.balanceOf(address(this)), 'SparkPool: Not enough token/s');
         rewardToken.safeTransfer(address(msg.sender), _amount);
     }
 }
