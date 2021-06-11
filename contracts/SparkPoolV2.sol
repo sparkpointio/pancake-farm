@@ -29,7 +29,6 @@ contract SparkPool is Ownable {
 
     // Pool Info
     struct PoolInfo {
-        IBEP20 lpToken;           // Address of LP token contract.
         uint256 allocPoint;       // How many allocation points assigned to this pool. Token Rewards to distribute per block.
         uint256 lastRewardBlock;  // Last block number that Token Rewards distribution occurs.
         uint256 accRewardPerShare;  // Accumulated Token Rewards per share, times 1e12. See below.
@@ -76,7 +75,6 @@ contract SparkPool is Ownable {
         bonusEndBlock = _bonusEndBlock;
 
         // Staking Pool
-        poolInfo.lpToken = stakingToken;
         poolInfo.allocPoint = 1000;
         poolInfo.lastRewardBlock = startBlock;
         poolInfo.accRewardPerShare = 0;
@@ -151,7 +149,7 @@ contract SparkPool is Ownable {
             }
         }
         if(_amount > 0) {
-            poolInfo.lpToken.safeTransferFrom(address(msg.sender), address(this), _amount);
+            stakingToken.safeTransferFrom(address(msg.sender), address(this), _amount);
             user.amount = user.amount.add(_amount);
             totalDeposit.add(_amount);
         }
@@ -172,7 +170,7 @@ contract SparkPool is Ownable {
         if(_amount > 0) {
             user.amount = user.amount.sub(_amount);
             totalDeposit.sub(_amount);
-            poolInfo.lpToken.safeTransfer(address(msg.sender), _amount);
+            stakingToken.safeTransfer(address(msg.sender), _amount);
         }
         user.rewardDebt = user.amount.mul(poolInfo.accRewardPerShare).div(1e12);
 
@@ -182,7 +180,7 @@ contract SparkPool is Ownable {
     // EMERGENCY ONLY: Withdraw without caring about rewards.
     function emergencyWithdraw() public {
         UserInfo storage user = userInfo[msg.sender];
-        poolInfo.lpToken.safeTransfer(address(msg.sender), user.amount);
+        stakingToken.safeTransfer(address(msg.sender), user.amount);
         emit EmergencyWithdraw(msg.sender, user.amount);
         totalDeposit.sub(user.amount);
         user.amount = 0;
