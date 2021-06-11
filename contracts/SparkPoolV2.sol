@@ -41,6 +41,10 @@ contract SparkPool is Ownable {
     // The REWARD TOKEN!
     IBEP20 public rewardToken;
 
+    // The total staking token deposits
+    uint256 public totalDeposit;
+
+
     uint256 public maxStaking;
 
     // Tokens rewarded per block.
@@ -77,6 +81,8 @@ contract SparkPool is Ownable {
         poolInfo.lastRewardBlock = startBlock;
         poolInfo.accRewardPerShare = 0;
 
+        totalDeposit = 0;
+
         totalAllocPoint = 1000;
         maxStaking = 50000000000000000000;
     }
@@ -90,7 +96,7 @@ contract SparkPool is Ownable {
     function pendingReward(address _user) external view returns (uint256) {
         UserInfo storage user = userInfo[_user];
         uint256 accRewardPerShare = poolInfo.accRewardPerShare;
-        uint256 lpSupply = poolInfo.lpToken.balanceOf(address(this));
+        uint256 lpSupply = totalDeposit;
         if (block.number > poolInfo.lastRewardBlock && lpSupply != 0) {
             uint256 multiplier = getMultiplier(poolInfo.lastRewardBlock, block.number);
             uint256 tokenReward = multiplier.mul(rewardPerBlock).mul(poolInfo.allocPoint).div(totalAllocPoint);
@@ -104,7 +110,7 @@ contract SparkPool is Ownable {
         if (block.number <= poolInfo.lastRewardBlock) {
             return;
         }
-        uint256 lpSupply = poolInfo.lpToken.balanceOf(address(this));
+        uint256 lpSupply = totalDeposit;
         if (lpSupply == 0) {
             poolInfo.lastRewardBlock = block.number;
             return;
@@ -147,6 +153,7 @@ contract SparkPool is Ownable {
         if(_amount > 0) {
             poolInfo.lpToken.safeTransferFrom(address(msg.sender), address(this), _amount);
             user.amount = user.amount.add(_amount);
+            totalDeposit.add(_amount);
         }
         user.rewardDebt = user.amount.mul(poolInfo.accRewardPerShare).div(1e12);
 
@@ -164,6 +171,7 @@ contract SparkPool is Ownable {
         }
         if(_amount > 0) {
             user.amount = user.amount.sub(_amount);
+            totalDeposit.sub(_amount);
             poolInfo.lpToken.safeTransfer(address(msg.sender), _amount);
         }
         user.rewardDebt = user.amount.mul(poolInfo.accRewardPerShare).div(1e12);
@@ -176,6 +184,7 @@ contract SparkPool is Ownable {
         UserInfo storage user = userInfo[msg.sender];
         poolInfo.lpToken.safeTransfer(address(msg.sender), user.amount);
         emit EmergencyWithdraw(msg.sender, user.amount);
+        totalDeposit.sub(user.amount);
         user.amount = 0;
         user.rewardDebt = 0;
     }
