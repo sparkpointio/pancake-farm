@@ -666,7 +666,7 @@ contract SparkPool is Ownable {
     // Pool Info
     struct PoolInfo {
         uint256 lastRewardBlock;  // Last block number that Token Rewards distribution occurs.
-        uint256 accRewardPerShare;  // Accumulated Token Rewards per share, times 1e12. See below.
+        uint256 accRewardPerShare;  // Accumulated Token Rewards per share, times computationSensitivity. See below.
     }
     PoolInfo public poolInfo;
 
@@ -689,6 +689,9 @@ contract SparkPool is Ownable {
     // The block number when stakingToken mining ends.
     uint256 public bonusEndBlock;
 
+    // Fix for low token balance/reward digits
+    // If you don't know what to do. Default to 1e12
+    uint256 public computationSensitivity;
 
     event Deposit(address indexed user, uint256 amount);
     event Withdraw(address indexed user, uint256 amount);
@@ -699,13 +702,15 @@ contract SparkPool is Ownable {
         IBEP20 _rewardToken,
         uint256 _rewardPerBlock,
         uint256 _startBlock,
-        uint256 _bonusEndBlock
+        uint256 _bonusEndBlock,
+        uint256 _computationSensitivity
     ) public {
         stakingToken = _stakingToken;
         rewardToken = _rewardToken;
         rewardPerBlock = _rewardPerBlock;
         startBlock = _startBlock;
         bonusEndBlock = _bonusEndBlock;
+        computationSensitivity = _computationSensitivity;
 
         // Staking Pool
         poolInfo.lastRewardBlock = startBlock;
@@ -729,9 +734,9 @@ contract SparkPool is Ownable {
         if (block.number > poolInfo.lastRewardBlock && lpSupply != 0) {
             uint256 multiplier = getMultiplier(poolInfo.lastRewardBlock, block.number);
             uint256 tokenReward = multiplier.mul(rewardPerBlock);
-            accRewardPerShare = accRewardPerShare.add(tokenReward.mul(1e12).div(lpSupply));
+            accRewardPerShare = accRewardPerShare.add(tokenReward.mul(computationSensitivity).div(lpSupply));
         }
-        return user.amount.mul(accRewardPerShare).div(1e12).sub(user.rewardDebt);
+        return user.amount.mul(accRewardPerShare).div(computationSensitivity).sub(user.rewardDebt);
     }
 
     // Update reward variables of the given pool to be up-to-date
@@ -746,7 +751,7 @@ contract SparkPool is Ownable {
         }
         uint256 multiplier = getMultiplier(poolInfo.lastRewardBlock, block.number);
         uint256 tokenReward = multiplier.mul(rewardPerBlock);
-        poolInfo.accRewardPerShare = poolInfo.accRewardPerShare.add(tokenReward.mul(1e12).div(lpSupply));
+        poolInfo.accRewardPerShare = poolInfo.accRewardPerShare.add(tokenReward.mul(computationSensitivity).div(lpSupply));
         poolInfo.lastRewardBlock = block.number;
     }
     
@@ -774,7 +779,7 @@ contract SparkPool is Ownable {
 
         updatePool();
         if (user.amount > 0) {
-            uint256 pending = user.amount.mul(poolInfo.accRewardPerShare).div(1e12).sub(user.rewardDebt);
+            uint256 pending = user.amount.mul(poolInfo.accRewardPerShare).div(computationSensitivity).sub(user.rewardDebt);
             if(pending > 0) {
                 rewardToken.safeTransfer(address(msg.sender), pending);
             }
@@ -784,7 +789,7 @@ contract SparkPool is Ownable {
             user.amount = user.amount.add(_amount);
             totalDeposit = totalDeposit.add(_amount);
         }
-        user.rewardDebt = user.amount.mul(poolInfo.accRewardPerShare).div(1e12);
+        user.rewardDebt = user.amount.mul(poolInfo.accRewardPerShare).div(computationSensitivity);
 
         emit Deposit(msg.sender, _amount);
     }
@@ -794,7 +799,7 @@ contract SparkPool is Ownable {
         UserInfo storage user = userInfo[msg.sender];
         require(user.amount >= _amount, 'SparkPool: Amount exceeded user available amount');
         updatePool();
-        uint256 pending = user.amount.mul(poolInfo.accRewardPerShare).div(1e12).sub(user.rewardDebt);
+        uint256 pending = user.amount.mul(poolInfo.accRewardPerShare).div(computationSensitivity).sub(user.rewardDebt);
         if(pending > 0) {
             rewardToken.safeTransfer(address(msg.sender), pending);
         }
@@ -803,7 +808,7 @@ contract SparkPool is Ownable {
             totalDeposit = totalDeposit.sub(_amount);
             stakingToken.safeTransfer(address(msg.sender), _amount);
         }
-        user.rewardDebt = user.amount.mul(poolInfo.accRewardPerShare).div(1e12);
+        user.rewardDebt = user.amount.mul(poolInfo.accRewardPerShare).div(computationSensitivity);
 
         emit Withdraw(msg.sender, _amount);
     }
