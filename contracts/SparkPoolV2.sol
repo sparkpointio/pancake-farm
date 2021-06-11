@@ -55,7 +55,7 @@ contract SparkPool is Ownable {
 
     // Fix for low token balance/reward digits
     // If you don't know what to do. Default to 1e12
-    uint256 public computationSensitivity
+    uint256 public computationSensitivity;
 
     event Deposit(address indexed user, uint256 amount);
     event Withdraw(address indexed user, uint256 amount);
