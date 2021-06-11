@@ -1,8 +1,3 @@
-
-// File: @pancakeswap/pancake-swap-lib/contracts/GSN/Context.sol
-
-// SPDX-License-Identifier: GPL-3.0-or-later
-
 pragma solidity >=0.4.0;
 
 /*
@@ -30,12 +25,7 @@ contract Context {
     }
 }
 
-// File: @pancakeswap/pancake-swap-lib/contracts/access/Ownable.sol
-
-// SPDX-License-Identifier: GPL-3.0-or-later
-
 pragma solidity >=0.4.0;
-
 
 /**
  * @dev Contract module which provides a basic access control mechanism, where
@@ -107,10 +97,6 @@ contract Ownable is Context {
         _owner = newOwner;
     }
 }
-
-// File: @pancakeswap/pancake-swap-lib/contracts/utils/Address.sol
-
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.6.2;
 
@@ -272,14 +258,7 @@ library Address {
     }
 }
 
-// File: @pancakeswap/pancake-swap-lib/contracts/token/BEP20/SafeBEP20.sol
-
-// SPDX-License-Identifier: MIT
-
 pragma solidity ^0.6.0;
-
-
-
 
 /**
  * @title SafeBEP20
@@ -374,10 +353,6 @@ library SafeBEP20 {
         }
     }
 }
-
-// File: @pancakeswap/pancake-swap-lib/contracts/token/BEP20/IBEP20.sol
-
-// SPDX-License-Identifier: GPL-3.0-or-later
 
 pragma solidity >=0.4.0;
 
@@ -475,10 +450,6 @@ interface IBEP20 {
      */
     event Approval(address indexed owner, address indexed spender, uint256 value);
 }
-
-// File: @pancakeswap/pancake-swap-lib/contracts/math/SafeMath.sol
-
-// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.4.0;
 
@@ -668,13 +639,7 @@ library SafeMath {
     }
 }
 
-// File: contracts/SparkPoolV2.sol
-
 pragma solidity 0.6.12;
-
-
-
-
 
 contract SparkPool is Ownable {
     using SafeMath for uint256;
