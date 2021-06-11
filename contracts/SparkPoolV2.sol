@@ -29,7 +29,6 @@ contract SparkPool is Ownable {
 
     // Pool Info
     struct PoolInfo {
-        uint256 allocPoint;       // How many allocation points assigned to this pool. Token Rewards to distribute per block.
         uint256 lastRewardBlock;  // Last block number that Token Rewards distribution occurs.
         uint256 accRewardPerShare;  // Accumulated Token Rewards per share, times 1e12. See below.
     }
@@ -49,8 +48,6 @@ contract SparkPool is Ownable {
     // Tokens rewarded per block.
     uint256 public rewardPerBlock;
 
-    // Total allocation points. Must be the sum of all allocation points in all pools.
-    uint256 private totalAllocPoint = 0;
     // The block number when stakingToken mining starts.
     uint256 public startBlock;
     // The block number when stakingToken mining ends.
@@ -75,13 +72,11 @@ contract SparkPool is Ownable {
         bonusEndBlock = _bonusEndBlock;
 
         // Staking Pool
-        poolInfo.allocPoint = 1000;
         poolInfo.lastRewardBlock = startBlock;
         poolInfo.accRewardPerShare = 0;
 
         totalDeposit = 0;
 
-        totalAllocPoint = 1000;
         maxStaking = 50000000000000000000;
     }
 
@@ -97,7 +92,7 @@ contract SparkPool is Ownable {
         uint256 lpSupply = totalDeposit;
         if (block.number > poolInfo.lastRewardBlock && lpSupply != 0) {
             uint256 multiplier = getMultiplier(poolInfo.lastRewardBlock, block.number);
-            uint256 tokenReward = multiplier.mul(rewardPerBlock).mul(poolInfo.allocPoint).div(totalAllocPoint);
+            uint256 tokenReward = multiplier.mul(rewardPerBlock);
             accRewardPerShare = accRewardPerShare.add(tokenReward.mul(1e12).div(lpSupply));
         }
         return user.amount.mul(accRewardPerShare).div(1e12).sub(user.rewardDebt);
@@ -114,7 +109,7 @@ contract SparkPool is Ownable {
             return;
         }
         uint256 multiplier = getMultiplier(poolInfo.lastRewardBlock, block.number);
-        uint256 tokenReward = multiplier.mul(rewardPerBlock).mul(poolInfo.allocPoint).div(totalAllocPoint);
+        uint256 tokenReward = multiplier.mul(rewardPerBlock);
         poolInfo.accRewardPerShare = poolInfo.accRewardPerShare.add(tokenReward.mul(1e12).div(lpSupply));
         poolInfo.lastRewardBlock = block.number;
     }
