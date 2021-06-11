@@ -782,7 +782,7 @@ contract SparkPool is Ownable {
         if(_amount > 0) {
             stakingToken.safeTransferFrom(address(msg.sender), address(this), _amount);
             user.amount = user.amount.add(_amount);
-            totalDeposit.add(_amount);
+            totalDeposit = totalDeposit.add(_amount);
         }
         user.rewardDebt = user.amount.mul(poolInfo.accRewardPerShare).div(1e12);
 
@@ -800,7 +800,7 @@ contract SparkPool is Ownable {
         }
         if(_amount > 0) {
             user.amount = user.amount.sub(_amount);
-            totalDeposit.sub(_amount);
+            totalDeposit = totalDeposit.sub(_amount);
             stakingToken.safeTransfer(address(msg.sender), _amount);
         }
         user.rewardDebt = user.amount.mul(poolInfo.accRewardPerShare).div(1e12);
@@ -813,7 +813,7 @@ contract SparkPool is Ownable {
         UserInfo storage user = userInfo[msg.sender];
         stakingToken.safeTransfer(address(msg.sender), user.amount);
         emit EmergencyWithdraw(msg.sender, user.amount);
-        totalDeposit.sub(user.amount);
+        totalDeposit = totalDeposit.sub(user.amount);
         user.amount = 0;
         user.rewardDebt = 0;
     }
