@@ -66,7 +66,7 @@ contract SparkPool is Ownable {
         IBEP20 _rewardToken,
         uint256 _rewardPerBlock,
         uint256 _startBlock,
-        uint256 _bonusEndBlock
+        uint256 _bonusEndBlock,
         uint256 _computationSensitivity
     ) public {
         stakingToken = _stakingToken;
