@@ -189,7 +189,7 @@ contract SparkPool is Ownable {
 
     // EMERGENCY ONLY: Withdraw reward.
     function emergencyRewardWithdraw(uint256 _amount) public onlyOwner rewardDone {
-        require(_amount < rewardToken.balanceOf(address(this)), 'SparkPool: Not enough token/s');
+        require(_amount <= rewardToken.balanceOf(address(this)), 'SparkPool: Not enough token/s');
         rewardToken.safeTransfer(address(msg.sender), _amount);
     }
 }
